@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Texture Designer &middot; Stone Path Maker</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo"></span>
+      <div>
+        <h1>Texture Designer</h1>
+        <p class="tagline">Seamless tileable stone-path textures</p>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button id="randomize-all" class="btn ghost">Shuffle</button>
+      <button id="export-btn" class="btn primary">Export PNG</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="sidebar">
+      <div class="presets-block">
+        <span class="block-label">Presets</span>
+        <div id="presets" class="presets"></div>
+      </div>
+      <div id="controls" class="controls"></div>
+    </aside>
+
+    <section class="stage">
+      <div class="stage-inner">
+        <div class="canvas-card">
+          <div class="card-head">
+            <span>Tile</span>
+            <span id="status" class="status">&nbsp;</span>
+          </div>
+          <div class="canvas-frame">
+            <canvas id="main-canvas"></canvas>
+          </div>
+        </div>
+
+        <div class="canvas-card">
+          <div class="card-head">
+            <span>Seamless preview (3&times;3)</span>
+          </div>
+          <div class="canvas-frame">
+            <canvas id="tile-canvas" width="600" height="600"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/texture.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
