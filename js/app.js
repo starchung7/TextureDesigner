@@ -27,11 +27,13 @@
     // dirt
     dirtOn: true, dirtAmount: 0.35, dirtColor: '#2c241c', dirtScale: 4,
     // cracks
-    cracksOn: false, cracksAmount: 0.45,
+    cracksOn: false, cracksAmount: 0.45, cracksScale: 0.4,
     // speckle
     speckleOn: true, speckleAmount: 0.18,
     // lighting
-    lightAngle: 135, lightElevation: 42, relief: 1.0, ambient: 0.38
+    lightAngle: 135, lightElevation: 42, relief: 1.0, ambient: 0.38,
+    // output
+    greyscale: false
   };
 
   // presets tweak a subset of params on top of current values
@@ -76,7 +78,8 @@
       title: 'Tile', controls: [
         { key: 'resolution', label: 'Resolution', type: 'select',
           options: [['256', 256], ['512', 512], ['1024', 1024]] },
-        { key: 'seed', label: 'Seed', type: 'seed' }
+        { key: 'seed', label: 'Seed', type: 'seed' },
+        { key: 'greyscale', label: 'Greyscale', type: 'check' }
       ]
     },
     {
@@ -118,7 +121,8 @@
     },
     {
       title: 'Cracks', toggle: 'cracksOn', controls: [
-        { key: 'cracksAmount', label: 'Amount', type: 'range', min: 0, max: 1, step: 0.01 }
+        { key: 'cracksAmount', label: 'Amount', type: 'range', min: 0, max: 1, step: 0.01 },
+        { key: 'cracksScale', label: 'Crack scale', type: 'range', min: 0, max: 1, step: 0.01 }
       ]
     },
     {
@@ -225,6 +229,21 @@
       return row;
     }
 
+    if (c.type === 'check') {
+      const lab = el('label', null, c.label);
+      const input = document.createElement('input');
+      input.type = 'checkbox';
+      input.className = 'check-box';
+      input.checked = !!params[c.key];
+      input.addEventListener('change', () => {
+        params[c.key] = input.checked;
+        scheduleRender();
+      });
+      inputRefs[c.key] = { el: input };
+      row.appendChild(lab); row.appendChild(input);
+      return row;
+    }
+
     if (c.type === 'color') {
       const lab = el('label', null, c.label);
       const input = document.createElement('input');
@@ -284,8 +303,10 @@
       if (!ref) return;
       if (ref.el.type === 'checkbox') {
         ref.el.checked = !!params[key];
-        const sec = ref.el.closest('.section');
-        if (sec) sec.classList.toggle('disabled', !params[key]);
+        if (ref.el.classList.contains('section-toggle')) {
+          const sec = ref.el.closest('.section');
+          if (sec) sec.classList.toggle('disabled', !params[key]);
+        }
       } else {
         ref.el.value = params[key];
       }

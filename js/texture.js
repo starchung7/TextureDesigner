@@ -212,7 +212,8 @@
         // cracks (thin recessed lines that wander across stones)
         let crackDark = 0;
         if (params.cracksOn && stoneShape > 0.3) {
-          const crackFreq = Math.max(2, Math.round(params.density * 3));
+          // cracksScale: higher -> larger crack features (lower frequency)
+          const crackFreq = Math.max(2, Math.round(params.density * (5.5 - params.cracksScale * 4.5)));
           const cv = voronoi(u, v, crackFreq, 1.0, seed + 9001);
           const cb = (cv.f2 - cv.f1);
           const cn = fbm(u, v, 6, 3, seed + 4242);
@@ -334,9 +335,16 @@
         const spec = Math.pow(diff, 18) * 0.25;
 
         const o = idx * 4;
-        data[o] = clamp(albedo[idx * 3] * shade + spec * 255, 0, 255);
-        data[o + 1] = clamp(albedo[idx * 3 + 1] * shade + spec * 255, 0, 255);
-        data[o + 2] = clamp(albedo[idx * 3 + 2] * shade + spec * 255, 0, 255);
+        let r = clamp(albedo[idx * 3] * shade + spec * 255, 0, 255);
+        let g = clamp(albedo[idx * 3 + 1] * shade + spec * 255, 0, 255);
+        let b = clamp(albedo[idx * 3 + 2] * shade + spec * 255, 0, 255);
+        if (params.greyscale) {
+          const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+          r = g = b = lum;
+        }
+        data[o] = r;
+        data[o + 1] = g;
+        data[o + 2] = b;
         data[o + 3] = 255;
       }
     }
